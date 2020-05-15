@@ -17,8 +17,8 @@ const diceLimit = rateLimit({ window: 5 * 60 * 1000, limit: 1 })
 const bot = new Telegraf(process.env.BOT_TOKEN)
 bot.context.h = helpers
 bot.context.db = database(process.env.MONGO_URI)
-bot.use(i18n, diceLimit)
-bot.on('dice', groupChat(fork(dice)))
+bot.use(i18n)
+bot.on('dice', groupChat(diceLimit, fork(dice)))
 bot.catch(err => debug(err))
 bot.launch()
 
