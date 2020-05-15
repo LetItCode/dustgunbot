@@ -1,0 +1,7 @@
+brah: <b>${user}</b> получил бесценный жизненный опыт
+msg1: <b>${user}</b> потерял <b>${change}</b> своей Magic dust
+msg2: <b>${user}</b> потерял <b>${change}</b> x Magic dust
+msg3: <b>${user}</b> остался при своих
+msg4: <b>${user}</b> приобрел <b>${change}</b> x Magic dust
+msg5: <b>${user}</b> разжился <b>${change}</b> x Magic dust
+msg6: <b>${user}</b> сказочно разбогател на целых <b>${change}</b> x Magic dust
