@@ -4,7 +4,7 @@
   "description": "Телеграм бот, созданный по мотивам прошедшего ивента в игре Chat Wars",
   "main": "src/app.js",
   "scripts": {
-    "dev": "DEBUG=darts:* nodemon -w src src/app.js"
+    "dev": "DEBUG=dg:* nodemon -w src src/app.js"
   },
   "author": "Josh Dies",
   "license": "ISC",

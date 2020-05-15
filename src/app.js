@@ -1,5 +1,5 @@
 require('dotenv').config()
-const debug = require('debug')('darts:app')
+const debug = require('debug')('dg:app')
 const { Telegraf, groupChat, fork } = require('telegraf')
 const TelegrafI18n = require('telegraf-i18n')
 const rateLimit = require('telegraf-ratelimit')
