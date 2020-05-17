@@ -19,7 +19,7 @@ bot.context.h = helpers
 bot.context.db = database(process.env.MONGO_URI)
 bot.use(i18n)
 bot.on('dice', groupChat(diceLimit, fork(dice)))
-bot.command('top', groupChat(top))
+bot.hears(/^\/top(?<kind>exp)?($|@)/, groupChat(top))
 bot.catch(err => debug(err))
 bot.launch()
 
@@ -31,7 +31,7 @@ async function dice (ctx) {
   const user = await db.User.findOneAndUpdate(
     { telegramId: from.id },
     {
-      $setOnInsert: { dust: 1 },
+      $setOnInsert: { dust: 1, exp: 0 },
       $set: {
         username: from.username,
         firstName: from.first_name,
@@ -66,22 +66,23 @@ function calcReward (value, dust) {
 }
 
 async function top (ctx) {
-  const { from, replyWithHTML, i18n, db, h } = ctx
+  const { match, from, replyWithHTML, i18n, db, h } = ctx
+  const { kind = 'dust' } = match.groups
 
-  const users = await db.User.find().sort({ dust: -1 })
+  const users = await db.User.find().sort({ [kind]: -1 })
   if (users.length === 0) return safePassThru()
 
   const top5Emoji = ['🥇', '🥈', '🥉', '🎗', '🎗']
-  let text = i18n.t('top.title') + '\n\n'
+  let text = i18n.t(`top.${kind}Title`) + '\n'
   const topList = users
     .map((user, index) => {
-      if (index < 5) return i18n.t('top.bestRow', { emoji: top5Emoji[index], user: h.fullName(user), score: user.dust })
+      if (index < 5) return i18n.t('top.bestRow', { emoji: top5Emoji[index], user: h.fullName(user), score: user[kind] })
       else if (
         users[index].telegramId === from.id ||
         (users[index + 1] && users[index + 1].telegramId === from.id) ||
         (users[index - 1] && users[index - 1].telegramId === from.id && index > 5)
       )
-        return i18n.t('top.row', { place: index + 1, user: h.fullName(user), score: user.dust })
+        return i18n.t('top.row', { place: index + 1, user: h.fullName(user), score: user[kind] })
     })
     .filter(_ => _)
   text += topList.splice(0, 5).join('\n')

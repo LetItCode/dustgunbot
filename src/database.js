@@ -15,13 +15,14 @@ module.exports = uri => {
     username: String,
     firstName: String,
     lastName: String,
-    dust: Number
+    dust: Number,
+    exp: Number
   })
 
   userSchema.statics.reward = function (telegramId, change) {
     return this.findOneAndUpdate(
       { telegramId },
-      change === 'brah' ? { $set: { dust: 1 } } : { $inc: { dust: change } }
+      change === 'brah' ? { $set: { dust: 1 }, $inc: { exp: 1 } } : { $inc: { dust: change } }
     ).exec()
   }
 
