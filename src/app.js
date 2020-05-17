@@ -1,6 +1,6 @@
 require('dotenv').config()
 const debug = require('debug')('dg:app')
-const { Telegraf, groupChat, fork } = require('telegraf')
+const { Telegraf, groupChat, fork, safePassThru } = require('telegraf')
 const TelegrafI18n = require('telegraf-i18n')
 const rateLimit = require('telegraf-ratelimit')
 const path = require('path')
@@ -19,6 +19,7 @@ bot.context.h = helpers
 bot.context.db = database(process.env.MONGO_URI)
 bot.use(i18n)
 bot.on('dice', groupChat(diceLimit, fork(dice)))
+bot.command('top', groupChat(top))
 bot.catch(err => debug(err))
 bot.launch()
 
@@ -62,4 +63,29 @@ function calcReward (value, dust) {
     case 5: return 3 // prettier-ignore
     case 6: return Math.ceil(dust) // prettier-ignore
   }
+}
+
+async function top (ctx) {
+  const { from, replyWithHTML, i18n, db, h } = ctx
+
+  const users = await db.User.find().sort({ dust: -1 })
+  if (users.length === 0) return safePassThru()
+
+  const top5Emoji = ['🥇', '🥈', '🥉', '🎗', '🎗']
+  let text = i18n.t('top.title') + '\n\n'
+  const topList = users
+    .map((user, index) => {
+      if (index < 5) return i18n.t('top.bestRow', { emoji: top5Emoji[index], user: h.fullName(user), score: user.dust })
+      else if (
+        users[index].telegramId === from.id ||
+        (users[index + 1] && users[index + 1].telegramId === from.id) ||
+        (users[index - 1] && users[index - 1].telegramId === from.id && index > 5)
+      )
+        return i18n.t('top.row', { place: index + 1, user: h.fullName(user), score: user.dust })
+    })
+    .filter(_ => _)
+  text += topList.splice(0, 5).join('\n')
+  if (topList.length > 0) text += '\n...\n' + topList.join('\n')
+
+  replyWithHTML(text)
 }
