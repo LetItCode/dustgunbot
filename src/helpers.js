@@ -12,6 +12,8 @@ function escapeHTMLChar (c) {
   }
 }
 
-h.fullName = from => h.escapeHTMLChars([from.first_name, from.last_name].filter(_ => _).join(' ')) || 'Незнакомец'
+h.fullName = from =>
+  h.escapeHTMLChars([from.first_name || from.firstName, from.last_name || from.lastName].filter(_ => _).join(' ')) ||
+  'Незнакомец'
 
 h.pause = delay => new Promise(resolve => setTimeout(resolve, delay))
