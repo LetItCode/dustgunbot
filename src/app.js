@@ -1,6 +1,6 @@
 require('dotenv').config()
 const debug = require('debug')('dg:app')
-const { Telegraf, groupChat, fork, safePassThru } = require('telegraf')
+const { Telegraf, groupChat, fork, optional, safePassThru } = require('telegraf')
 const TelegrafI18n = require('telegraf-i18n')
 const rateLimit = require('telegraf-ratelimit')
 const path = require('path')
@@ -18,10 +18,15 @@ const bot = new Telegraf(process.env.BOT_TOKEN)
 bot.context.h = helpers
 bot.context.db = database(process.env.MONGO_URI)
 bot.use(i18n)
-bot.on('dice', groupChat(diceLimit, fork(dice)))
+bot.on('dice', groupChat(notForward(diceLimit, fork(dice))))
 bot.hears(/^\/top(?<kind>exp)?($|@)/, groupChat(top))
 bot.catch(err => debug(err))
 bot.launch()
+
+// Middleware
+function notForward (...fns) {
+  return optional(ctx => ctx.message && !ctx.message.forward_from, ...fns)
+}
 
 // Handlers
 async function dice (ctx) {
