@@ -22,7 +22,7 @@ module.exports = async ctx => {
         return i18n.t('top.row', { place: index + 1, user: h.fullName(user), score: user[kind] })
       }
     })
-    .filter(_ => _)
+    .filter(Boolean)
   text += topList.splice(0, 5).join('\n')
   if (topList.length > 0) text += '\n...\n' + topList.join('\n')
 
