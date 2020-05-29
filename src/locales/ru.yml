@@ -8,5 +8,5 @@ msg6: <b>${user}</b> сказочно разбогател на целых <b>${
 top:
   dustTitle: <b>✨Топ игроков</b>
   expTitle: <b>🔥Топ опытных</b>
-  bestRow: '${emoji} ${user}\: ${score}'
-  row: '<b>${place}</b> ${user}\: ${score}'
+  bestRow: '${emoji} ${user}\u200e\: ${score}'
+  row: '<b>${place}</b> ${user}\u200e\: ${score}'
