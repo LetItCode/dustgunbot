@@ -1,3 +1,4 @@
 module.exports = {
-  notForward: require('./not-forward')
+  notForward: require('./not-forward'),
+  casino: require('./casino')
 }

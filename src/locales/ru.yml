@@ -5,6 +5,8 @@ msg3: <b>${user}</b> остался при своих
 msg4: <b>${user}</b> приобрел <b>${change}</b> x Magic dust
 msg5: <b>${user}</b> разжился <b>${change}</b> x Magic dust
 msg6: <b>${user}</b> сказочно разбогател на целых <b>${change}</b> x Magic dust
+win: <b>${user}</b>, выиграл <b>${change}</b> Magic dust
+lose: <b>${user}</b>, проиграл <b>${change}</b> своей Magic dust
 top:
   dustTitle: <b>✨Топ игроков</b>
   expTitle: <b>🔥Топ опытных</b>
